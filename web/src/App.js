@@ -1,6 +1,8 @@
 import React from "react";
 import Upload from "rc-upload";
 import axios from "axios";
+import Table from "./Table";
+
 import "./App.css";
 
 const uploadProps = {
@@ -71,6 +73,19 @@ class App extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  httpRequest = ({ action, formData, headers }) => {
+    axios
+      .post(action, formData, {
+        headers
+      })
+      .then(({ data: response }) => {
+        this.setState({ showTable: true, response });
+      })
+      .catch(err => {
+        console.log("err");
+      });
+  };
 
   render() {
     return (

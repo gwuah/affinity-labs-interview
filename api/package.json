@@ -4,7 +4,7 @@
   "description": "API for affinity",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --coverage",
     "start": "node index.js"
   },
   "author": "gwuah (Griffith Asare Awuah)",
@@ -13,5 +13,32 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.6"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "!<rootDir>/coverage/",
+      "<rootDir>/*.js",
+      "!<rootDir>/index.js",
+      "!<rootDir>/node_modules/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "html"
+    ],
+    "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "supertest": "^4.0.2"
   }
 }

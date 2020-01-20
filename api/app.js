@@ -12,18 +12,14 @@ app.use(fileUpload());
 app.post("/upload", (req, res) => {
   const path = `${__dirname}/${req.files.csv.name}`;
   req.files.csv.mv(path, err => {
-    if (!err) {
-      utils.billCreator(path, results => {
-        res.json({ results }).status(200);
-      });
-    } else {
-      res.json({ type: "Failed To Save" }).status(500);
-    }
+    utils.billCreator(path, results => {
+      res.json({ results }).status(200);
+    });
   });
 });
 
 app.get("/", (req, res) => {
-  res.send("Affinity Server 😎");
+  return res.status(200).json({ name: "Affinity Server 😎" });
 });
 
 module.exports = app;

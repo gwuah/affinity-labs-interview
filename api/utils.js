@@ -8,7 +8,7 @@ let readFile = file => {
     let reader = readline.createInterface({ input: readStream });
 
     reader.on("line", line => {
-      if (line.trim()) lines.push(line);
+      lines.push(line.trim());
     });
 
     reader.on("close", () => {
@@ -113,5 +113,6 @@ function billCreator(path, cb) {
 }
 
 module.exports = {
-  billCreator
+  billCreator,
+  readFile
 };

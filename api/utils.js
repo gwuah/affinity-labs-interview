@@ -45,51 +45,59 @@ function rowParser(row) {
 
 function billCreator(path, cb) {
   readFile(path).then(data => {
-    data.shift(); // remove the first row
+    // remove the first row
+    data.shift();
+    // convert to useful form
     const parsedData = data.map(rowParser);
-    const database = {};
-    for (log of parsedData) {
-      const company = log.company;
-      if (!database[company]) {
-        database[company] = [log];
+
+    // arrange records according to companies
+    const companyDatabase = {};
+    for (record of parsedData) {
+      const company = record.company;
+      if (!companyDatabase[company]) {
+        companyDatabase[company] = [record];
       } else {
-        database[company].push(log);
+        companyDatabase[company].push(record);
       }
     }
 
     const finalMap = {};
 
-    Object.keys(database).forEach(company => {
-      let db = { [company]: [] };
-      for (const log of database[company]) {
-        const employeeRecordIndex = db[company].findIndex(
-          employee => employee.id === log.id
+    Object.keys(companyDatabase).forEach(company => {
+      let temporalDB = { [company]: [] };
+      for (const record of companyDatabase[company]) {
+        // we find records by id
+        const employeeRecordIndex = temporalDB[company].findIndex(
+          employee => employee.id === record.id
         );
+        // if they exist, we merge their details
         if (employeeRecordIndex > -1) {
-          const record = db[company][employeeRecordIndex];
-          const newHours = log.hours + record.hours;
-          db[company][employeeRecordIndex] = {
-            ...record,
+          const oldRecord = temporalDB[company][employeeRecordIndex];
+          const newHours = record.hours + oldRecord.hours;
+          const newCost = record.cost + oldRecord.cost;
+          temporalDB[company][employeeRecordIndex] = {
+            ...oldRecord,
             hours: newHours,
-            cost: record.cost + log.cost
+            cost: newCost
           };
         } else {
-          db[company].push({
-            id: log.id,
-            hours: log.hours,
-            rate: log.rate,
-            cost: log.cost,
-            key: log.id
+          // else we create a fresh entry
+          temporalDB[company].push({
+            id: record.id,
+            hours: record.hours,
+            rate: record.rate,
+            cost: record.cost,
+            key: record.id
           });
         }
       }
-      finalMap[company] = db[company].sort((a, b) => {
+      // after sorting for a particular company, sort it and store it
+      finalMap[company] = temporalDB[company].sort((a, b) => {
         return parseFloat(a.id) - parseFloat(b.id);
       });
     });
 
-    // console.log(JSON.stringify(results, null, 2));
-
+    // pass the final object to a callback
     cb(finalMap);
   });
 }

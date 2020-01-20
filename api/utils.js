@@ -78,11 +78,14 @@ function billCreator(path, cb) {
             id: log.id,
             hours: log.hours,
             rate: log.rate,
-            cost: log.cost
+            cost: log.cost,
+            key: log.id
           });
         }
       }
-      finalMap[company] = db[company];
+      finalMap[company] = db[company].sort((a, b) => {
+        return parseFloat(a.id) - parseFloat(b.id);
+      });
     });
 
     // console.log(JSON.stringify(results, null, 2));

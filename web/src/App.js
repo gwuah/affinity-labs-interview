@@ -21,18 +21,6 @@ class App extends React.Component {
     this.state = { results: [], response: {} };
   }
 
-  // parseResponse = () => {
-  //   const { response } = this.state;
-  //   Object.keys(response).forEach(key => {
-  //     const newContainer = [];
-  //     for (const record of response[key]) {
-  //       newContainer.push({
-
-  //       })
-  //     }
-  //   });
-  // };
-
   httpRequest = ({ action, headers, data, filename, file }) => {
     const formData = new FormData();
     if (data) {
@@ -46,8 +34,8 @@ class App extends React.Component {
       .post(action, formData, {
         headers
       })
-      .then(({ data: response }) => {
-        this.setState({ response: response.results });
+      .then(({ data }) => {
+        this.setState({ response: data.results });
       })
       .catch(err => {
         console.log("err");
@@ -61,7 +49,6 @@ class App extends React.Component {
   };
 
   render() {
-    console.log(this.state.results);
     const { response } = this.state;
     const props = { ...uploadProps, customRequest: this.httpRequest };
     return (
@@ -71,12 +58,10 @@ class App extends React.Component {
             <button className="upload-button">Choose File</button>
           </Upload>
           {Object.keys(response).map(key => {
-            console.log(key);
-            console.log(response[key]);
             return (
               <div>
                 <h1>{key}</h1>
-                <Table data={response[key]} />
+                <Table bordered data={response[key]} />
               </div>
             );
           })}

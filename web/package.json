@@ -7,6 +7,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.1",
+    "eslint-config-react-app": "^5.1.0",
     "rc-table": "^7.0.0-rc.7",
     "rc-upload": "^2.9.4",
     "react": "^16.12.0",
@@ -16,7 +17,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "yarn run eslint 'src/**/*.{js,jsx}' && react-scripts test --coverage --watchAll=false",
+    "style:fix": "yarn run eslint --fix 'src/**/*.{js,jsx}'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -32,6 +34,39 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.18.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "prettier": "^1.19.1"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!<rootDir>/node_modules/",
+      "!<rootDir>/src/index.js",
+      "!<rootDir>/src/serviceWorker.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "html"
     ]
   }
 }

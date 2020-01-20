@@ -1,18 +1,18 @@
-import React from "react";
-import Upload from "rc-upload";
-import axios from "axios";
-import Table from "./Table";
+import React from 'react';
+import Upload from 'rc-upload';
+import axios from 'axios';
+import Table from './Table';
 
-import "./App.css";
+import './App.css';
 
 const uploadProps = {
-  name: "csv",
-  action: "http://localhost:5888/upload",
+  name: 'csv',
+  action: 'http://localhost:5888/upload',
   multiple: false,
   data: { a: 1, b: 2 },
   headers: {
-    "Content-Type": "multipart/form-data"
-  }
+    'Content-Type': 'multipart/form-data',
+  },
 };
 
 class App extends React.Component {
@@ -32,19 +32,19 @@ class App extends React.Component {
 
     axios
       .post(action, formData, {
-        headers
+        headers,
       })
       .then(({ data }) => {
         this.setState({ response: data.results });
       })
       .catch(err => {
-        console.log("err");
+        console.log('err');
       });
 
     return {
       abort() {
-        console.log("upload progress is aborted.");
-      }
+        console.log('upload progress is aborted.');
+      },
     };
   };
 
@@ -55,7 +55,7 @@ class App extends React.Component {
       <div className="container">
         <div className="file-input-container">
           <Upload {...props}>
-            <button className="upload-button" style={{ marginBottom: "30px" }}>
+            <button className="upload-button" style={{ marginBottom: '30px' }}>
               Click Here To Upload File
             </button>
           </Upload>
@@ -65,11 +65,11 @@ class App extends React.Component {
                 <h1>{company.toUpperCase()}</h1>
                 <Table bordered data={response[company].logs} />
                 <div className="total-heading-container">
-                  <span className="total-heading">Total Hours</span> :{" "}
+                  <span className="total-heading">Total Hours</span> :{' '}
                   {response[company].totalHours}
                 </div>
                 <div className="total-heading-container">
-                  <span className="total-heading">Total Cost</span> :{" "}
+                  <span className="total-heading">Total Cost</span> :{' '}
                   {response[company].totalCost}
                 </div>
               </div>

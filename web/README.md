@@ -17,3 +17,4 @@
 ## To run tests
 
 - Run `yarn test` or `npm test` in this folder.
+- If your tests fail because of an eslint error, run `yarn style:fix` to automatically fix the errors.

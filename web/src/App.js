@@ -18,16 +18,14 @@ const uploadProps = {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { response: {} };
+    this.state = { response: {}, err: null };
   }
 
   httpRequest = ({ action, headers, data, filename, file }) => {
     const formData = new FormData();
-    if (data) {
-      Object.keys(data).forEach(key => {
-        formData.append(key, data[key]);
-      });
-    }
+    Object.keys(data).forEach(key => {
+      formData.append(key, data[key]);
+    });
     formData.append(filename, file);
 
     axios
@@ -37,39 +35,42 @@ class App extends React.Component {
       .then(({ data }) => {
         this.setState({ response: data.results });
       })
-      .catch(err => {
-        console.log('err');
+      .catch(() => {
+        this.setState({ err: true });
       });
-
-    return {
-      abort() {
-        console.log('upload progress is aborted.');
-      },
-    };
   };
 
   render() {
-    const { response } = this.state;
+    const { response, err } = this.state;
     const props = { ...uploadProps, customRequest: this.httpRequest };
     return (
-      <div className="container">
-        <div className="file-input-container">
-          <Upload {...props}>
-            <button className="upload-button" style={{ marginBottom: '30px' }}>
+      <div className='container' data-testid='app'>
+        <div className='file-input-container'>
+          <Upload {...props} data-testid='upload-component'>
+            <button
+              data-testid='upload-button'
+              className='upload-button'
+              style={{ marginBottom: '30px' }}
+            >
               Click Here To Upload File
             </button>
           </Upload>
+          {err && (
+            <h2 data-testid='error-message'>
+              An Error Occurred. Make sure your server is up
+            </h2>
+          )}
           {Object.keys(response).map(company => {
             return (
-              <div className="table-container">
+              <div className='table-container' key={company}>
                 <h1>{company.toUpperCase()}</h1>
                 <Table bordered data={response[company].logs} />
-                <div className="total-heading-container">
-                  <span className="total-heading">Total Hours</span> :{' '}
+                <div className='total-heading-container'>
+                  <span className='total-heading'>Total Hours</span> :{' '}
                   {response[company].totalHours}
                 </div>
-                <div className="total-heading-container">
-                  <span className="total-heading">Total Cost</span> :{' '}
+                <div className='total-heading-container'>
+                  <span className='total-heading'>Total Cost</span> :{' '}
                   {response[company].totalCost}
                 </div>
               </div>

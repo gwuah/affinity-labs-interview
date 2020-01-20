@@ -18,7 +18,7 @@ const uploadProps = {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { results: [], response: {} };
+    this.state = { response: {} };
   }
 
   httpRequest = ({ action, headers, data, filename, file }) => {
@@ -57,11 +57,11 @@ class App extends React.Component {
           <Upload {...props}>
             <button className="upload-button">Choose File</button>
           </Upload>
-          {Object.keys(response).map(key => {
+          {Object.keys(response).map(company => {
             return (
               <div>
-                <h1>{key}</h1>
-                <Table bordered data={response[key]} />
+                <h1>{company}</h1>
+                <Table bordered data={response[company]} />
               </div>
             );
           })}

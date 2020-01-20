@@ -12,29 +12,28 @@ const uploadProps = {
   data: { a: 1, b: 2 },
   headers: {
     "Content-Type": "multipart/form-data"
-  },
-  onStart(file) {
-    console.log("onStart", file, file.name);
-  },
-  onSuccess(ret, file) {
-    console.log("onSuccess", ret, file.name);
-  },
-  onError(err) {
-    console.log("onError", err);
-  },
-  onProgress({ percent }, file) {
-    console.log("onProgress", `${percent}%`, file.name);
-  },
-  customRequest({
-    action,
-    data,
-    file,
-    filename,
-    headers,
-    onError,
-    onProgress,
-    onSuccess
-  }) {
+  }
+};
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { results: [], response: {} };
+  }
+
+  // parseResponse = () => {
+  //   const { response } = this.state;
+  //   Object.keys(response).forEach(key => {
+  //     const newContainer = [];
+  //     for (const record of response[key]) {
+  //       newContainer.push({
+
+  //       })
+  //     }
+  //   });
+  // };
+
+  httpRequest = ({ action, headers, data, filename, file }) => {
     const formData = new FormData();
     if (data) {
       Object.keys(data).forEach(key => {
@@ -45,20 +44,13 @@ const uploadProps = {
 
     axios
       .post(action, formData, {
-        headers,
-        onUploadProgress: ({ total, loaded }) => {
-          onProgress(
-            { percent: Math.round((loaded / total) * 100).toFixed(2) },
-            file
-          );
-        }
+        headers
       })
       .then(({ data: response }) => {
-        onSuccess(response, file);
+        this.setState({ response: response.results });
       })
       .catch(err => {
-        console.log("axxxxx");
-        onError(err);
+        console.log("err");
       });
 
     return {
@@ -66,34 +58,28 @@ const uploadProps = {
         console.log("upload progress is aborted.");
       }
     };
-  }
-};
-
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  httpRequest = ({ action, formData, headers }) => {
-    axios
-      .post(action, formData, {
-        headers
-      })
-      .then(({ data: response }) => {
-        this.setState({ showTable: true, response });
-      })
-      .catch(err => {
-        console.log("err");
-      });
   };
 
   render() {
+    console.log(this.state.results);
+    const { response } = this.state;
+    const props = { ...uploadProps, customRequest: this.httpRequest };
     return (
       <div className="container">
         <div className="file-input-container">
-          <Upload {...uploadProps}>
+          <Upload {...props}>
             <button className="upload-button">Choose File</button>
           </Upload>
+          {Object.keys(response).map(key => {
+            console.log(key);
+            console.log(response[key]);
+            return (
+              <div>
+                <h1>{key}</h1>
+                <Table data={response[key]} />
+              </div>
+            );
+          })}
           <br />
         </div>
       </div>

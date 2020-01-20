@@ -57,7 +57,9 @@ function billCreator(path, cb) {
       }
     }
 
-    const results = Object.keys(database).map(company => {
+    const finalMap = {};
+
+    Object.keys(database).forEach(company => {
       let db = { [company]: [] };
       for (const log of database[company]) {
         const employeeRecordIndex = db[company].findIndex(
@@ -80,12 +82,12 @@ function billCreator(path, cb) {
           });
         }
       }
-      return db;
+      finalMap[company] = db[company];
     });
 
-    console.log(JSON.stringify(results, null, 2));
+    // console.log(JSON.stringify(results, null, 2));
 
-    cb(results);
+    cb(finalMap);
   });
 }
 

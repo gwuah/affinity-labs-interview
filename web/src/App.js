@@ -55,13 +55,23 @@ class App extends React.Component {
       <div className="container">
         <div className="file-input-container">
           <Upload {...props}>
-            <button className="upload-button">Choose File</button>
+            <button className="upload-button" style={{ marginBottom: "30px" }}>
+              Click Here To Upload File
+            </button>
           </Upload>
           {Object.keys(response).map(company => {
             return (
-              <div>
-                <h1>{company}</h1>
-                <Table bordered data={response[company]} />
+              <div className="table-container">
+                <h1>{company.toUpperCase()}</h1>
+                <Table bordered data={response[company].logs} />
+                <div className="total-heading-container">
+                  <span className="total-heading">Total Hours</span> :{" "}
+                  {response[company].totalHours}
+                </div>
+                <div className="total-heading-container">
+                  <span className="total-heading">Total Cost</span> :{" "}
+                  {response[company].totalCost}
+                </div>
               </div>
             );
           })}

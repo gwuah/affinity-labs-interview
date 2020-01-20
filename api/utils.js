@@ -65,6 +65,8 @@ function billCreator(path, cb) {
 
     Object.keys(companyDatabase).forEach(company => {
       let temporalDB = { [company]: [] };
+      let totalHours = 0;
+      let totalCost = 0;
       for (const record of companyDatabase[company]) {
         // we find records by id
         const employeeRecordIndex = temporalDB[company].findIndex(
@@ -80,6 +82,8 @@ function billCreator(path, cb) {
             hours: newHours,
             cost: newCost
           };
+          totalHours += record.hours;
+          totalCost += record.cost;
         } else {
           // else we create a fresh entry
           temporalDB[company].push({
@@ -89,12 +93,18 @@ function billCreator(path, cb) {
             cost: record.cost,
             key: record.id
           });
+          totalHours += record.hours;
+          totalCost += record.cost;
         }
       }
       // after sorting for a particular company, sort it and store it
-      finalMap[company] = temporalDB[company].sort((a, b) => {
-        return parseFloat(a.id) - parseFloat(b.id);
-      });
+      finalMap[company] = {
+        totalCost,
+        totalHours,
+        logs: temporalDB[company].sort((a, b) => {
+          return parseFloat(a.id) - parseFloat(b.id);
+        })
+      };
     });
 
     // pass the final object to a callback

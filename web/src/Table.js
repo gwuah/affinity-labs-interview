@@ -12,7 +12,7 @@ const columns = [
     title: "Number of Hours",
     dataIndex: "hours",
     key: "Number of Hours",
-    width: 100
+    width: 200
   },
   {
     title: "Unit Price",
@@ -29,5 +29,13 @@ const columns = [
 ];
 
 export default function CustomTable({ data }) {
-  return <Table columns={columns} data={data} />;
+  return (
+    <div
+      style={{
+        marginBottom: "15px"
+      }}
+    >
+      <Table columns={columns} data={data} />
+    </div>
+  );
 }
